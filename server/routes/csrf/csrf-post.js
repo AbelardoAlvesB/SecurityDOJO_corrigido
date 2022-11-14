@@ -13,7 +13,7 @@ const renderData = {};
 
 router.get(
 	'/csrf-post',
-	csrfProtect(async (req, res) => {
+	csrfProtect, async (req, res) => {
 		const token = req.cookies.token;
 		const user = jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
 			if (err) {
@@ -30,7 +30,7 @@ router.get(
 			renderData.token = req.csrfToken()
 			res.render('csrf-post', renderData);
 		}
-	})
+	}
 );
 
 router.post(
@@ -47,7 +47,7 @@ router.post(
 			} else return decoded.user_id;
 		});
 		//BUSCA NO BANCO DE DADOS SE O USUARIO EXISTE
-		const { rows } = await getUserById(user_id);
+		const { rows } = await getUserById(user);
 		const userExiste = rows.length == 1;
 		if (userExiste) {
 			const { rows } = await updateUsername(novo_username, user);
